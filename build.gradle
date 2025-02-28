@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+def pluginVersion = file('src/main/resources/plugin.yml').readLines()
+    .find { it.startsWith('version:') }
+    ?.substring('version:'.length())
+    ?.trim() ?: '1.0.0'
+
+def testServerPlugins = 'E:/testserver 1.21.4/plugins'
+
+tasks.shadowJar {
+    archiveBaseName.set('EasyTPA')
+    archiveClassifier.set('')
+    archiveVersion.set(pluginVersion)
+    
+    doLast {
+        copy {
+            from archiveFile
+            into testServerPlugins
+        }
+    }
+}
+
+tasks.build {
+    dependsOn tasks.shadowJar
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+} 

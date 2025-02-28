@@ -1,0 +1,13 @@
+.gradle
+bin
+build
+.vscode
+.DS_Store
+*.log
+*.log.gz
+*.log.zip
+*.log.tar
+*.log.tar.gz
+*.log.tar.zip
+*.log.tar.tar
+*.log.tar.tar.gz

@@ -1,0 +1,6 @@
+name: EasyTPA
+version: 1.0.0
+main: com.maybeizen.EasyTPA.EasyTPA
+description: A simple TPA plugin
+author: maybeizen
+api-version: "1.21.4"
