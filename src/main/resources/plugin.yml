@@ -1,6 +1,19 @@
 name: EasyTPA
-version: 1.0.0
+version: 1.0
 main: com.maybeizen.EasyTPA.EasyTPA
 description: A simple TPA plugin
 author: maybeizen
 api-version: "1.21.4"
+commands:
+  test:
+    description: "Test command"
+    usage: "/test"
+  tpa:
+    description: Send a teleport request to another player
+    usage: /<command> <player>
+  tpaccept:
+    description: Accept a pending teleport request
+    usage: /<command>
+  tpdeny:
+    description: Deny a pending teleport request
+    usage: /<command>

@@ -1,0 +1,37 @@
+# EasyTPA Configuration
+# Made by maybeizen
+
+# Time in seconds before a player can send another teleport request
+cooldown-seconds: 30
+
+messages:
+  prefix: "&7[&6EasyTPA&7] "
+  tpa-sent: "&aYou have sent a teleport request to &e{player}"
+  tpa-received: "&e{player} &ahas sent you a teleport request"
+  tpa-accepted: "&aTeleport request accepted!"
+  tpa-denied: "&cTeleport request denied"
+  tpa-expired: "&cTeleport request expired"
+  no-pending-requests: "&cYou have no pending teleport requests"
+  player-only: "&cThis command can only be used by players."
+  tpa-usage: "&cUsage: /tpa <player>"
+  player-not-found: "&cPlayer not found."
+  cannot-teleport-self: "&cYou cannot send a teleport request to yourself."
+  already-has-request: "&cThis player already has a pending teleport request!"
+  request-sent: "&aYou have sent a teleport request to &e%player%&a."
+  request-received: "&e%player% &ahas requested to teleport to you."
+  request-expired: "&cThe teleport request has expired."
+  request-expired-target: "&cThe teleport request has expired!"
+  no-pending-request: "&cYou don't have any pending teleport requests!"
+  request-accepted: "&aYour teleport request has been accepted!"
+  request-accepted-target: "&aYou accepted &e%player%&a's teleport request."
+  request-denied: "&cYour teleport request has been denied."
+  request-denied-target: "&cYou denied &e%player%&c's teleport request."
+  player-offline: "&cThe player who sent the request is no longer online!"
+  cooldown: "&cYou must wait &e{time} &cseconds before sending another request!"
+  teleport-success: "&aYou have been teleported to &e%player%&a."
+
+# Settings
+settings:
+  request-timeout: 60 # Time in seconds before a request expires
+  cooldown: 30 # Time in seconds between teleport requests
+  enable-sounds: true # Play sounds for teleport events
