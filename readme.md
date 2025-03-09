@@ -23,8 +23,6 @@ The plugin is compatible with the following Minecraft versions:
 - 1.20.x
 - 1.19.4
 
-Each version has its own JAR file in the releases section. Make sure to download the correct version for your server.
-
 ## Commands
 
 - `/tpa <player>` - Send a teleport request to a player
