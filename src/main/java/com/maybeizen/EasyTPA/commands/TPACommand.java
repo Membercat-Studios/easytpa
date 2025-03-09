@@ -30,25 +30,39 @@ public class TPACommand implements CommandExecutor {
         Player target = plugin.getServer().getPlayer(args[0]);
 
         if (target == null) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
+            sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
             return true;
         }
 
         if (target.equals(player)) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("cannot-teleport-self")));
+            sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("cannot-teleport-self")));
+            return true;
+        }
+
+        if (!plugin.getToggleManager().isTPEnabled(target)) {
+            sender.sendMessage(MessageUtils.formatMessage(
+                plugin.getConfigManager().getMessage("target-has-tp-disabled"), 
+                "player", target.getName()
+            ));
             return true;
         }
 
         if (plugin.getCooldownManager().hasCooldown(player.getUniqueId())) {
             String timeLeft = plugin.getCooldownManager().getRemainingTimeString(player.getUniqueId());
-            player.sendMessage(MessageUtils.formatMessage("&cPlease wait " + timeLeft + " before sending another request."));
+            sender.sendMessage(MessageUtils.formatMessage(
+                plugin.getConfigManager().getMessage("cooldown"), 
+                "time", timeLeft
+            ));
             return true;
         }
 
         if (plugin.getTPAManager().sendRequest(player, target)) {
             plugin.getCooldownManager().setCooldown(player.getUniqueId());
             
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("request-sent", "player", target.getName())));
+            sender.sendMessage(MessageUtils.formatMessage(
+                plugin.getConfigManager().getMessage("request-sent"), 
+                "player", target.getName()
+            ));
             MessageUtils.sendTeleportRequest(player, target);
         }
 

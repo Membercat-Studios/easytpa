@@ -6,13 +6,14 @@ cooldown-seconds: 30
 
 messages:
   prefix: "&7[&6EasyTPA&7] "
-  tpa-sent: "&aYou have sent a teleport request to &e{player}"
-  tpa-received: "&e{player} &ahas sent you a teleport request"
+  tpa-sent: "&aYou have sent a teleport request to &e%player%"
+  tpa-received: "&e%player% &ahas sent you a teleport request"
   tpa-accepted: "&aTeleport request accepted!"
   tpa-denied: "&cTeleport request denied"
   tpa-expired: "&cTeleport request expired"
   no-pending-requests: "&cYou have no pending teleport requests"
   player-only: "&cThis command can only be used by players."
+  no-permission: "&cYou don't have permission to use this command."
   tpa-usage: "&cUsage: /tpa <player>"
   player-not-found: "&cPlayer not found."
   cannot-teleport-self: "&cYou cannot send a teleport request to yourself."
@@ -27,8 +28,12 @@ messages:
   request-denied: "&cYour teleport request has been denied."
   request-denied-target: "&cYou denied &e%player%&c's teleport request."
   player-offline: "&cThe player who sent the request is no longer online!"
-  cooldown: "&cYou must wait &e{time} &cseconds before sending another request!"
+  cooldown: "&cYou must wait &e%time% &cseconds before sending another request!"
   teleport-success: "&aYou have been teleported to &e%player%&a."
+  toggle-enabled: "&aTeleport requests have been &2enabled&a."
+  toggle-disabled: "&cTeleport requests have been &4disabled&c."
+  target-has-tp-disabled: "&c%player% has teleport requests disabled."
+  config-reloaded: "&aConfiguration has been reloaded successfully!"
 
 # Settings
 settings:

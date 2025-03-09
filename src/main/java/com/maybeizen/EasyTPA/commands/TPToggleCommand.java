@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import com.maybeizen.EasyTPA.EasyTPA;
 import com.maybeizen.EasyTPA.utils.MessageUtils;
 
-public class TPAcceptCommand implements CommandExecutor {
+public class TPToggleCommand implements CommandExecutor {
     private final EasyTPA plugin;
 
-    public TPAcceptCommand(EasyTPA plugin) {
+    public TPToggleCommand(EasyTPA plugin) {
         this.plugin = plugin;
     }
 
@@ -23,12 +23,17 @@ public class TPAcceptCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         
-        // If a player name is specified, we could implement accepting from a specific player
-        // For now, just accept the most recent request
-        if (plugin.getTPAManager().acceptRequest(player)) {
-            // Success messages are handled in TPAManager
+        if (!player.hasPermission("easytpa.toggle")) {
+            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            return true;
         }
 
+        boolean newState = plugin.getToggleManager().toggleTP(player);
+        String message = newState ? 
+            plugin.getConfigManager().getMessage("toggle-enabled") :
+            plugin.getConfigManager().getMessage("toggle-disabled");
+        
+        player.sendMessage(MessageUtils.formatMessage(message));
         return true;
     }
 } 

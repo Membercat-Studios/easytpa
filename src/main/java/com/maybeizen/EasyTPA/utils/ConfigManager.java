@@ -1,20 +1,21 @@
 package com.maybeizen.EasyTPA.utils;
 
+import com.maybeizen.EasyTPA.EasyTPA;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.ChatColor;
 
 public class ConfigManager {
     private static ConfigManager instance;
-    private final Plugin plugin;
+    private final EasyTPA plugin;
     private FileConfiguration config;
 
-    private ConfigManager(Plugin plugin) {
+    private ConfigManager(EasyTPA plugin) {
         this.plugin = plugin;
-        loadConfig();
+        this.config = plugin.getConfig();
     }
 
-    public static ConfigManager getInstance(Plugin plugin) {
+    public static ConfigManager getInstance(EasyTPA plugin) {
         if (instance == null) {
             instance = new ConfigManager(plugin);
         }
@@ -29,26 +30,16 @@ public class ConfigManager {
 
     public void reloadConfig() {
         plugin.reloadConfig();
-        config = plugin.getConfig();
+        this.config = plugin.getConfig();
     }
 
     public String getMessage(String path) {
-        String message = config.getString("messages." + path, "Message not found: " + path);
-        return ChatColor.translateAlternateColorCodes('&', message);
+        return config.getString("messages." + path, "Message not found: " + path);
     }
 
     public String getMessage(String path, String... placeholders) {
-        if (placeholders.length % 2 != 0) {
-            throw new IllegalArgumentException("Placeholders must be in pairs!");
-        }
-
-        String message = config.getString("messages." + path, "Message not found: " + path);
-        
-        for (int i = 0; i < placeholders.length; i += 2) {
-            message = message.replace("{" + placeholders[i] + "}", placeholders[i + 1]);
-        }
-        
-        return ChatColor.translateAlternateColorCodes('&', message);
+        String message = getMessage(path);
+        return message.contains("%") ? message : message;  // Return raw message if no placeholders needed
     }
 
     public int getRequestTimeout() {
