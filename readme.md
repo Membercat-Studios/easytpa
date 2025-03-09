@@ -1,65 +1,54 @@
-# EasyTPA
+<div align="center">
+  <img src="assets/easytpa.png" alt="EasyTPA Logo" width="200">
+  <h1>EasyTPA</h1>
+  <p><strong>Simple, powerful teleport requests for Minecraft servers</strong></p>
+  
+  [![Minecraft](https://img.shields.io/badge/Minecraft-1.19.4--1.21.4-brightgreen)](https://www.minecraft.net/)
+  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](license)
+  [![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.java.com/)
+</div>
 
-A simple yet powerful Minecraft teleport request plugin that allows players to request teleportation to other players with interactive features and customizable settings.
+## ✨ Features
 
-## Features
+- **Simple Commands** - `/tpa`, `/tpaccept`, `/tpdeny` and more
+- **Interactive UI** - Clickable accept/deny buttons with hover text
+- **Sound Effects** - Audio feedback for requests and teleportation
+- **Customizable** - Fully configurable messages and settings
+- **Performance** - Lightweight with minimal resource usage
+- **Flexible** - Permission-based access with bypass options
+- **Reliable** - Request timeout and cooldown systems
+- **Multi-version** - Support for Minecraft 1.19.4 through 1.21.4
 
-- 🎯 Simple `/tpa`, `/tpaccept`, and `/tpdeny` commands
-- 👆 Interactive clickable accept/deny buttons
-- 💬 Hover text for better user experience
-- 🔊 Sound effects for requests and teleportation
-- ⏲️ Configurable cooldown system
-- ⚡ Fast and lightweight
-- 🎨 Fully customizable messages
-- ⏱️ Request timeout system
-- 🔒 Permission-based access
-- 🔄 Multi-version support (1.19.4 - 1.21.4)
+## 📋 Commands
 
-## Version Compatibility
+| Command              | Description                     | Permission         |
+| -------------------- | ------------------------------- | ------------------ |
+| `/tpa <player>`      | Send a teleport request         | `easytpa.tpa`      |
+| `/tpaccept [player]` | Accept a teleport request       | `easytpa.tpaccept` |
+| `/tpdeny [player]`   | Deny a teleport request         | `easytpa.tpdeny`   |
+| `/tptoggle`          | Toggle teleport requests on/off | `easytpa.toggle`   |
+| `/easytpa reload`    | Reload the plugin configuration | `easytpa.admin`    |
 
-The plugin is compatible with the following Minecraft versions:
-
-- 1.21.x (Latest)
-- 1.20.x
-- 1.19.4
-
-## Commands
-
-- `/tpa <player>` - Send a teleport request to a player
-- `/tpaccept [player]` - Accept a teleport request
-- `/tpdeny [player]` - Deny a teleport request
-- `/tptoggle` - Toggle teleport requests on/off
-- `/easytpa reload` - Reload the plugin configuration
-
-## Permissions
+## 🔑 Permissions
 
 ### Basic Permissions
 
-- `easytpa.tpa` - Allows sending teleport requests (default: true)
-- `easytpa.tpaccept` - Allows accepting teleport requests (default: true)
-- `easytpa.tpdeny` - Allows denying teleport requests (default: true)
-- `easytpa.toggle` - Allows toggling teleport requests (default: true)
+- `easytpa.tpa` - Send teleport requests (default: true)
+- `easytpa.tpaccept` - Accept teleport requests (default: true)
+- `easytpa.tpdeny` - Deny teleport requests (default: true)
+- `easytpa.toggle` - Toggle teleport requests (default: true)
 
 ### Advanced Permissions
 
-- `easytpa.admin` - Allows access to admin commands (default: op)
-- `easytpa.bypass` - Allows bypassing players who have disabled teleport requests (default: op)
-- `easytpa.cooldown.bypass` - Allows bypassing the cooldown between teleport requests (default: op)
+- `easytpa.admin` - Access admin commands (default: op)
+- `easytpa.bypass` - Bypass disabled teleport requests (default: op)
+- `easytpa.cooldown.bypass` - Bypass cooldown timers (default: op)
 
 ### Permission Groups
 
-- `easytpa.*` - Grants all EasyTPA permissions (default: op)
+- `easytpa.*` - All EasyTPA permissions (default: op)
 
-### Permission Hierarchy
-
-The permission system is hierarchical, meaning that higher-level permissions include lower-level ones:
-
-- `easytpa.admin` includes all basic permissions
-- `easytpa.*` includes all permissions
-
-## Configuration
-
-The plugin is highly configurable through the `config.yml` file:
+## ⚙️ Configuration
 
 ```yaml
 # Time settings
@@ -74,59 +63,58 @@ messages:
   # ... and many more messages
 ```
 
-## Installation
+## 🚀 Installation
 
-1. Download the correct version for your server from the releases page
+1. Download the plugin from the [releases page](https://github.com/yourusername/easytpa/releases)
 2. Place the JAR file in your server's `plugins` folder
 3. Restart your server
-4. Configure the plugin in `plugins/EasyTPA/config.yml` (optional)
+4. Optionally configure in `plugins/EasyTPA/config.yml`
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
-### Permission Issues
+<details>
+<summary><b>Permission Issues</b></summary>
+<p><b>Problem:</b> Commands not working for players<br>
+<b>Solution:</b> Check permissions with <code>/lp user &lt;player&gt; permission info easytpa</code></p>
+</details>
 
-- **Problem**: Commands not working for players
-- **Solution**: Check that players have the correct permissions using `/lp user <player> permission info easytpa`
+<details>
+<summary><b>Plugin Not Loading</b></summary>
+<p><b>Problem:</b> Plugin fails to load on startup<br>
+<b>Solution:</b> Check console for errors and verify you're using compatible Java and Minecraft versions</p>
+</details>
 
-### Plugin Not Loading
-
-- **Problem**: Plugin fails to load on startup
-- **Solution**: Check your server console for error messages and ensure you're using a compatible version of Java and Minecraft
-
-## Building from Source
-
-1. Clone the repository
-2. Build using Gradle:
+## 🛠️ Building from Source
 
 ```bash
+git clone https://github.com/yourusername/easytpa.git
+
+# build a shaded jar with gradle
 ./gradlew shadowJar
+
+# find the bunbled jarfile in build/libs/
 ```
 
-4. Find the built JAR in `build/libs/`
+## 📝 Support
 
-## Dependencies
-
-- Spigot/Paper 1.19.4 - 1.21.4
-- Java 17 or higher (for 1.19.4+)
-
-## Support
-
-If you encounter any issues or have suggestions, please open an issue on the GitHub repository. When reporting issues, please include:
+If you encounter issues or have suggestions, please [open an issue](https://github.com/yourusername/easytpa/issues) with:
 
 - Server version
 - Plugin version
 - Java version
 - Error messages (if any)
-- Steps to reproduce the issue
+- Steps to reproduce
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](license) file for details.
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Feel free to submit pull requests or open issues for any bugs or feature requests.
+Contributions are welcome! Feel free to submit pull requests or open issues for bugs and feature requests.
 
 ---
 
-Made with ❤️ by maybeizen
+<div align="center">
+  <p>Made with ❤️ by <a href="https://github.com/maybeizen">maybeizen</a></p>
+</div>
