@@ -83,13 +83,6 @@ messages:
 
 ## Troubleshooting
 
-### Java Version Issues
-
-- **Error**: `java.lang.IllegalArgumentException: Unsupported class file major version 65`
-- **Solution**: Your server is running on a Java version older than Java 21. Either:
-  - Update your server to run on Java 21, or
-  - Download the Java 17 compatible version of the plugin
-
 ### Permission Issues
 
 - **Problem**: Commands not working for players
@@ -103,11 +96,10 @@ messages:
 ## Building from Source
 
 1. Clone the repository
-2. Switch to the branch matching your Minecraft version (e.g., `mc-1.19.4`, `mc-1.20`, `mc-1.21`)
-3. Build using Gradle:
+2. Build using Gradle:
 
 ```bash
-./gradlew build
+./gradlew shadowJar
 ```
 
 4. Find the built JAR in `build/libs/`
