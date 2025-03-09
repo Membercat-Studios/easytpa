@@ -83,6 +83,25 @@ messages:
 3. Restart your server
 4. Configure the plugin in `plugins/EasyTPA/config.yml` (optional)
 
+## Troubleshooting
+
+### Java Version Issues
+
+- **Error**: `java.lang.IllegalArgumentException: Unsupported class file major version 65`
+- **Solution**: Your server is running on a Java version older than Java 21. Either:
+  - Update your server to run on Java 21, or
+  - Download the Java 17 compatible version of the plugin
+
+### Permission Issues
+
+- **Problem**: Commands not working for players
+- **Solution**: Check that players have the correct permissions using `/lp user <player> permission info easytpa`
+
+### Plugin Not Loading
+
+- **Problem**: Plugin fails to load on startup
+- **Solution**: Check your server console for error messages and ensure you're using a compatible version of Java and Minecraft
+
 ## Building from Source
 
 1. Clone the repository
@@ -106,6 +125,7 @@ If you encounter any issues or have suggestions, please open an issue on the Git
 
 - Server version
 - Plugin version
+- Java version
 - Error messages (if any)
 - Steps to reproduce the issue
 

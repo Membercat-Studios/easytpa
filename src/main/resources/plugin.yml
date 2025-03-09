@@ -1,7 +1,7 @@
 name: EasyTPA
 version: 1.0.0
 main: com.maybeizen.EasyTPA.EasyTPA
-api-version: "1.21.4"
+api-version: "1.19"
 authors: [maybeizen]
 description: A simple yet powerful teleport request plugin
 commands:

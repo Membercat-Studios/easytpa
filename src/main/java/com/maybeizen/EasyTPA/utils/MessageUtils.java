@@ -18,11 +18,7 @@ public class MessageUtils {
         plugin = pluginInstance;
     }
     
-    private static String getPrefix() {
-        if (plugin == null) {
-            return ChatColor.DARK_AQUA + "[" + ChatColor.AQUA + "EasyTPA" + ChatColor.DARK_AQUA + "] " + ChatColor.RESET;
-        }
-        
+    private static String getPrefix() {        
         String prefix = plugin.getConfigManager().getMessage("prefix");
         if (prefix.equals("Message not found: prefix")) {
             prefix = plugin.getConfigManager().getDefaultPrefix();

@@ -12,13 +12,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
-    implementation "net.kyori:adventure-api:4.19.0"
+    compileOnly 'io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT'
+    implementation "net.kyori:adventure-api:4.14.0"
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -48,5 +48,5 @@ tasks.build {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 21
+    options.release = 17
 } 

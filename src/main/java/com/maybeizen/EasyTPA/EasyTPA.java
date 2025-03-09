@@ -53,17 +53,25 @@ public class EasyTPA extends JavaPlugin {
     }
 
     public void reloadConfiguration() {
-        reloadConfig();
-        
-        this.configManager = ConfigManager.getInstance(this);
-        this.cooldownManager = new CooldownManager(configManager.getCooldown());
-        
         if (toggleManager != null) {
             toggleManager.saveData();
         }
-        this.toggleManager = new ToggleManager(this);
+        
+        reloadConfig();
+        
+        configManager.reloadConfig();
+        
+        this.cooldownManager = new CooldownManager(configManager.getCooldown());
+        
+        if (toggleManager != null) {
+            toggleManager.reload();
+        } else {
+            this.toggleManager = new ToggleManager(this);
+        }
         
         MessageUtils.initialize(this);
+        
+        Bukkit.getLogger().info("EasyTPA configuration has been reloaded!");
     }
 
     public ConfigManager getConfigManager() {

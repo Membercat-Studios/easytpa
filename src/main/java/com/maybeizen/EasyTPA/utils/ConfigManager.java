@@ -10,12 +10,14 @@ public class ConfigManager {
 
     private ConfigManager(EasyTPA plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        loadConfig();
     }
 
     public static ConfigManager getInstance(EasyTPA plugin) {
         if (instance == null) {
             instance = new ConfigManager(plugin);
+        } else {
+            instance.loadConfig();
         }
         return instance;
     }

@@ -25,25 +25,61 @@ public class ToggleManager {
 
     private void loadData() {
         if (!dataFile.exists()) {
-            plugin.saveResource("toggle_data.yml", false);
+            try {
+                if (!dataFile.getParentFile().exists()) {
+                    dataFile.getParentFile().mkdirs();
+                }
+                
+                dataFile.createNewFile();
+                
+                data = new YamlConfiguration();
+                data.createSection("toggle_states");
+                data.save(dataFile);
+            } catch (IOException e) {
+                plugin.getLogger().severe("Failed to create toggle_data.yml: " + e.getMessage());
+                data = new YamlConfiguration();
+                return;
+            }
+        } else {
+            data = YamlConfiguration.loadConfiguration(dataFile);
         }
-        data = YamlConfiguration.loadConfiguration(dataFile);
         
-        if (data.contains("toggle_states")) {
+        toggleStates.clear();
+        
+        if (data.contains("toggle_states") && data.isConfigurationSection("toggle_states")) {
             for (String uuidStr : data.getConfigurationSection("toggle_states").getKeys(false)) {
-                UUID uuid = UUID.fromString(uuidStr);
-                boolean state = data.getBoolean("toggle_states." + uuidStr);
-                toggleStates.put(uuid, state);
+                try {
+                    UUID uuid = UUID.fromString(uuidStr);
+                    boolean state = data.getBoolean("toggle_states." + uuidStr);
+                    toggleStates.put(uuid, state);
+                } catch (IllegalArgumentException e) {
+                    plugin.getLogger().warning("Invalid UUID in toggle_data.yml: " + uuidStr);
+                }
+            }
+        } else {
+            data.createSection("toggle_states");
+            try {
+                data.save(dataFile);
+            } catch (IOException e) {
+                plugin.getLogger().warning("Failed to save toggle data: " + e.getMessage());
             }
         }
+        
+        plugin.getLogger().info("Loaded " + toggleStates.size() + " toggle states");
     }
 
     public void saveData() {
         try {
+            if (!data.contains("toggle_states")) {
+                data.createSection("toggle_states");
+            }
+            
             for (UUID uuid : toggleStates.keySet()) {
                 data.set("toggle_states." + uuid.toString(), toggleStates.get(uuid));
             }
+            
             data.save(dataFile);
+            plugin.getLogger().info("Saved " + toggleStates.size() + " toggle states");
         } catch (IOException e) {
             plugin.getLogger().warning("Failed to save toggle data: " + e.getMessage());
         }
@@ -63,5 +99,9 @@ public class ToggleManager {
     public void cleanup() {
         saveData();
         toggleStates.clear();
+    }
+
+    public void reload() {
+        loadData();
     }
 } 
