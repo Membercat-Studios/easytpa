@@ -23,7 +23,11 @@ public class TPDenyCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         
-        // If a player name is specified
+        if (!player.hasPermission("easytpa.tpdeny")) {
+            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            return true;
+        }
+        
         if (args.length > 0) {
             Player requester = plugin.getServer().getPlayer(args[0]);
             if (requester == null) {
@@ -38,7 +42,6 @@ public class TPDenyCommand implements CommandExecutor {
                 ));
             }
         } else {
-            // Deny the most recent request
             String requesterName = plugin.getTPAManager().denyRequest(player);
             if (requesterName != null) {
                 player.sendMessage(MessageUtils.formatMessage(

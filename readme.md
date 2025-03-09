@@ -30,12 +30,34 @@ Each version has its own JAR file in the releases section. Make sure to download
 - `/tpa <player>` - Send a teleport request to a player
 - `/tpaccept [player]` - Accept a teleport request
 - `/tpdeny [player]` - Deny a teleport request
+- `/tptoggle` - Toggle teleport requests on/off
+- `/easytpa reload` - Reload the plugin configuration
 
 ## Permissions
 
-- `easytpa.tpa` - Allows sending teleport requests
-- `easytpa.tpaccept` - Allows accepting teleport requests
-- `easytpa.tpdeny` - Allows denying teleport requests
+### Basic Permissions
+
+- `easytpa.tpa` - Allows sending teleport requests (default: true)
+- `easytpa.tpaccept` - Allows accepting teleport requests (default: true)
+- `easytpa.tpdeny` - Allows denying teleport requests (default: true)
+- `easytpa.toggle` - Allows toggling teleport requests (default: true)
+
+### Advanced Permissions
+
+- `easytpa.admin` - Allows access to admin commands (default: op)
+- `easytpa.bypass` - Allows bypassing players who have disabled teleport requests (default: op)
+- `easytpa.cooldown.bypass` - Allows bypassing the cooldown between teleport requests (default: op)
+
+### Permission Groups
+
+- `easytpa.*` - Grants all EasyTPA permissions (default: op)
+
+### Permission Hierarchy
+
+The permission system is hierarchical, meaning that higher-level permissions include lower-level ones:
+
+- `easytpa.admin` includes all basic permissions
+- `easytpa.*` includes all permissions
 
 ## Configuration
 
@@ -50,7 +72,7 @@ settings:
 
 # All messages are customizable
 messages:
-  prefix: "&7[&6EasyTPA&7] "
+  prefix: "&7[&6EasyTPA&7] &r"
   # ... and many more messages
 ```
 

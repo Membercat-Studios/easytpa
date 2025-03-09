@@ -29,7 +29,6 @@ public class EasyTPACommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Reload configuration
         plugin.reloadConfiguration();
         sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("config-reloaded")));
         return true;

@@ -1,28 +1,31 @@
 name: EasyTPA
-version: 1.0
+version: 1.0.0
 main: com.maybeizen.EasyTPA.EasyTPA
-api-version: "1.19"
+api-version: "1.21.4"
 authors: [maybeizen]
 description: A simple yet powerful teleport request plugin
 commands:
-  test:
-    description: "Test command"
-    usage: "/test"
   tpa:
     description: Send a teleport request to another player
     usage: /tpa <player>
+    permission: easytpa.tpa
   tpaccept:
     description: Accept a teleport request
     usage: /tpaccept [player]
+    permission: easytpa.tpaccept
   tpdeny:
     description: Deny a teleport request
     usage: /tpdeny [player]
+    permission: easytpa.tpdeny
   tptoggle:
     description: Toggle teleport requests on/off
     usage: /tptoggle
+    permission: easytpa.toggle
   easytpa:
     description: Admin commands for EasyTPA
     usage: /easytpa reload
+    permission: easytpa.admin
+
 permissions:
   easytpa.tpa:
     description: Allows sending teleport requests
@@ -39,3 +42,25 @@ permissions:
   easytpa.admin:
     description: Allows access to admin commands
     default: op
+    children:
+      easytpa.tpa: true
+      easytpa.tpaccept: true
+      easytpa.tpdeny: true
+      easytpa.toggle: true
+  easytpa.bypass:
+    description: Allows bypassing players who have disabled teleport requests
+    default: op
+  easytpa.cooldown.bypass:
+    description: Allows bypassing the cooldown between teleport requests
+    default: op
+  easytpa.*:
+    description: Grants all EasyTPA permissions
+    default: op
+    children:
+      easytpa.tpa: true
+      easytpa.tpaccept: true
+      easytpa.tpdeny: true
+      easytpa.toggle: true
+      easytpa.admin: true
+      easytpa.bypass: true
+      easytpa.cooldown.bypass: true

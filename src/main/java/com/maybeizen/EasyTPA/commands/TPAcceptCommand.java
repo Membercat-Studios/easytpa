@@ -23,10 +23,24 @@ public class TPAcceptCommand implements CommandExecutor {
 
         Player player = (Player) sender;
         
-        // If a player name is specified, we could implement accepting from a specific player
-        // For now, just accept the most recent request
-        if (plugin.getTPAManager().acceptRequest(player)) {
-            // Success messages are handled in TPAManager
+        if (!player.hasPermission("easytpa.tpaccept")) {
+            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            return true;
+        }
+
+        if (args.length > 0) {
+            Player requester = plugin.getServer().getPlayer(args[0]);
+            if (requester == null) {
+                player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
+                return true;
+            }
+            
+            if (plugin.getTPAManager().acceptRequestFrom(player, requester)) {
+            }
+        } else {
+            if (plugin.getTPAManager().acceptRequest(player)) {
+                // handled in tpa manager
+            }
         }
 
         return true;

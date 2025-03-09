@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class CooldownManager {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private final long cooldownTime; // cooldown in milliseconds
+    private final long cooldownTime; // Cooldown time in milliseconds
 
     public CooldownManager(long cooldownSeconds) {
         this.cooldownTime = cooldownSeconds * 1000;

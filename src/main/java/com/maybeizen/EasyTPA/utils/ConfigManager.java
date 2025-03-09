@@ -2,8 +2,6 @@ package com.maybeizen.EasyTPA.utils;
 
 import com.maybeizen.EasyTPA.EasyTPA;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.ChatColor;
 
 public class ConfigManager {
     private static ConfigManager instance;
@@ -39,7 +37,7 @@ public class ConfigManager {
 
     public String getMessage(String path, String... placeholders) {
         String message = getMessage(path);
-        return message.contains("%") ? message : message;  // Return raw message if no placeholders needed
+        return message.contains("%") ? message : message;
     }
 
     public int getRequestTimeout() {
@@ -52,6 +50,14 @@ public class ConfigManager {
 
     public boolean getSoundsEnabled() {
         return config.getBoolean("settings.enable-sounds", true);
+    }
+
+    public long getCooldownSeconds() {
+        return config.getLong("cooldown-seconds", 30);
+    }
+
+    public String getDefaultPrefix() {
+        return "&7[&6EasyTPA&7] &r";
     }
 
     public FileConfiguration getConfig() {

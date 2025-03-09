@@ -21,12 +21,18 @@ public class TPACommand implements CommandExecutor {
             return true;
         }
 
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("easytpa.tpa")) {
+            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            return true;
+        }
+
         if (args.length != 1) {
             sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("tpa-usage")));
             return true;
         }
 
-        Player player = (Player) sender;
         Player target = plugin.getServer().getPlayer(args[0]);
 
         if (target == null) {
