@@ -45,5 +45,12 @@ messages:
   toggle-disabled: "&cTeleport requests have been &4disabled&c."
   target-has-tp-disabled: "&c%player% has teleport requests disabled."
 
+  # Chat button messages
+  chat-button-accept: "&a[Accept]"
+  chat-button-deny: "&c[Deny]"
+  hover-text-accept: "&aClick to accept the teleport request"
+  hover-text-deny: "&cClick to deny the teleport request"
+
   # Admin messages
+  config-reloading: "&eReloading EasyTPA configuration..."
   config-reloaded: "&aConfiguration has been reloaded successfully!"

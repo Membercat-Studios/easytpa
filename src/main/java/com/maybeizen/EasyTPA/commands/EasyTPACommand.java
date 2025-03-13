@@ -29,7 +29,7 @@ public class EasyTPACommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        sender.sendMessage(MessageUtils.formatMessage("&eReloading EasyTPA configuration..."));
+        sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("config-reloading")));
         
         try {
             plugin.reloadConfiguration();

@@ -24,7 +24,7 @@ public class TPToggleCommand implements CommandExecutor {
         Player player = (Player) sender;
         
         if (!player.hasPermission("easytpa.toggle")) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-permission"));
             return true;
         }
 
@@ -33,7 +33,7 @@ public class TPToggleCommand implements CommandExecutor {
             plugin.getConfigManager().getMessage("toggle-enabled") :
             plugin.getConfigManager().getMessage("toggle-disabled");
         
-        player.sendMessage(MessageUtils.formatMessage(message));
+        MessageUtils.sendMessage(player, message);
         return true;
     }
 } 

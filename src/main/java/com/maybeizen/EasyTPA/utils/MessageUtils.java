@@ -1,10 +1,14 @@
 package com.maybeizen.EasyTPA.utils;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import com.maybeizen.EasyTPA.EasyTPA;
 
@@ -13,24 +17,28 @@ import java.util.Map;
 
 public class MessageUtils {
     private static EasyTPA plugin;
+    private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors()
+            .build();
     
     public static void initialize(EasyTPA pluginInstance) {
         plugin = pluginInstance;
     }
     
-    private static String getPrefix() {        
+    private static Component getPrefix() {        
         String prefix = plugin.getConfigManager().getMessage("prefix");
         if (prefix.equals("Message not found: prefix")) {
             prefix = plugin.getConfigManager().getDefaultPrefix();
         }
-        return ChatColor.translateAlternateColorCodes('&', prefix);
+        return LEGACY_SERIALIZER.deserialize(prefix);
     }
 
-    public static String formatMessage(String message) {
-        return getPrefix() + ChatColor.translateAlternateColorCodes('&', message);
+    public static Component formatMessage(String message) {
+        return getPrefix().append(LEGACY_SERIALIZER.deserialize(message));
     }
 
-    public static String formatMessage(String message, String... placeholders) {
+    public static Component formatMessage(String message, String... placeholders) {
         if (placeholders.length % 2 != 0) {
             throw new IllegalArgumentException("Placeholders must be in pairs of key-value");
         }
@@ -45,27 +53,37 @@ public class MessageUtils {
             formattedMessage = formattedMessage.replace("%" + entry.getKey() + "%", entry.getValue());
         }
 
-        return getPrefix() + ChatColor.translateAlternateColorCodes('&', formattedMessage);
+        return getPrefix().append(LEGACY_SERIALIZER.deserialize(formattedMessage));
+    }
+
+    public static void sendMessage(Player player, String message) {
+        player.sendMessage(formatMessage(message));
+    }
+
+    public static void sendMessage(Player player, String message, String... placeholders) {
+        player.sendMessage(formatMessage(message, placeholders));
     }
 
     public static void sendTeleportRequest(Player sender, Player target) {
         String requestMessage = plugin.getConfigManager().getMessage("request-received");
         requestMessage = requestMessage.replace("%player%", sender.getName());
         
-        TextComponent message = new TextComponent(getPrefix() + 
-            ChatColor.translateAlternateColorCodes('&', requestMessage + "\n"));
+        Component message = getPrefix().append(LEGACY_SERIALIZER.deserialize(requestMessage))
+                .append(Component.newline());
         
-        TextComponent accept = new TextComponent(ChatColor.GREEN + "[Accept] ");
-        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + sender.getName()));
-        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-            new ComponentBuilder("Click to accept the teleport request").color(ChatColor.GREEN).create()));
+        String acceptButtonText = plugin.getConfigManager().getMessage("chat-button-accept");
+        String acceptHoverText = plugin.getConfigManager().getMessage("hover-text-accept");
+        Component accept = LEGACY_SERIALIZER.deserialize(acceptButtonText)
+                .clickEvent(ClickEvent.runCommand("/tpaccept " + sender.getName()))
+                .hoverEvent(HoverEvent.showText(LEGACY_SERIALIZER.deserialize(acceptHoverText)));
 
-        TextComponent deny = new TextComponent(ChatColor.RED + "[Deny]");
-        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny " + sender.getName()));
-        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-            new ComponentBuilder("Click to deny the teleport request").color(ChatColor.RED).create()));
+        String denyButtonText = plugin.getConfigManager().getMessage("chat-button-deny");
+        String denyHoverText = plugin.getConfigManager().getMessage("hover-text-deny");
+        Component deny = LEGACY_SERIALIZER.deserialize(denyButtonText)
+                .clickEvent(ClickEvent.runCommand("/tpdeny " + sender.getName()))
+                .hoverEvent(HoverEvent.showText(LEGACY_SERIALIZER.deserialize(denyHoverText)));
 
-        target.spigot().sendMessage(message, accept, deny);
+        target.sendMessage(message.append(accept).append(Component.space()).append(deny));
         
         if (plugin.getConfigManager().getSoundsEnabled()) {
             VersionAdapter.playRequestSound(target);

@@ -24,14 +24,14 @@ public class TPAcceptCommand implements CommandExecutor {
         Player player = (Player) sender;
         
         if (!player.hasPermission("easytpa.tpaccept")) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-permission"));
             return true;
         }
 
         if (args.length > 0) {
             Player requester = plugin.getServer().getPlayer(args[0]);
             if (requester == null) {
-                player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
+                MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("player-not-found"));
                 return true;
             }
             
@@ -39,7 +39,6 @@ public class TPAcceptCommand implements CommandExecutor {
             }
         } else {
             if (plugin.getTPAManager().acceptRequest(player)) {
-                // handled in tpa manager
             }
         }
 

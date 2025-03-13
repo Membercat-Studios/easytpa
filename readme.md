@@ -92,7 +92,7 @@ git clone https://github.com/Membercat-Studios/easytpa.git
 # build a shaded jar with gradle
 ./gradlew shadowJar
 
-# find the bunbled jarfile in build/libs/
+# find the bundled jarfile in build/libs/
 ```
 
 ## 📝 Support

@@ -24,32 +24,32 @@ public class TPDenyCommand implements CommandExecutor {
         Player player = (Player) sender;
         
         if (!player.hasPermission("easytpa.tpdeny")) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-permission"));
             return true;
         }
         
         if (args.length > 0) {
             Player requester = plugin.getServer().getPlayer(args[0]);
             if (requester == null) {
-                player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
+                MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("player-not-found"));
                 return true;
             }
             
             if (plugin.getTPAManager().denyRequestFrom(player, requester)) {
-                player.sendMessage(MessageUtils.formatMessage(
+                MessageUtils.sendMessage(player,
                     plugin.getConfigManager().getMessage("request-denied-target"), 
                     "player", requester.getName()
-                ));
+                );
             }
         } else {
             String requesterName = plugin.getTPAManager().denyRequest(player);
             if (requesterName != null) {
-                player.sendMessage(MessageUtils.formatMessage(
+                MessageUtils.sendMessage(player,
                     plugin.getConfigManager().getMessage("request-denied-target"), 
                     "player", requesterName
-                ));
+                );
             } else {
-                player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-pending-request")));
+                MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-pending-request"));
             }
         }
 

@@ -24,51 +24,52 @@ public class TPACommand implements CommandExecutor {
         Player player = (Player) sender;
 
         if (!player.hasPermission("easytpa.tpa")) {
-            player.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("no-permission")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-permission"));
             return true;
         }
 
         if (args.length != 1) {
-            sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("tpa-usage")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("tpa-usage"));
             return true;
         }
 
         Player target = plugin.getServer().getPlayer(args[0]);
 
         if (target == null) {
-            sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("player-not-found")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("player-not-found"));
             return true;
         }
 
         if (target.equals(player)) {
-            sender.sendMessage(MessageUtils.formatMessage(plugin.getConfigManager().getMessage("cannot-teleport-self")));
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("cannot-teleport-self"));
             return true;
         }
 
         if (!plugin.getToggleManager().isTPEnabled(target)) {
-            sender.sendMessage(MessageUtils.formatMessage(
+            MessageUtils.sendMessage(player, 
                 plugin.getConfigManager().getMessage("target-has-tp-disabled"), 
                 "player", target.getName()
-            ));
+            );
             return true;
         }
 
-        if (plugin.getCooldownManager().hasCooldown(player.getUniqueId())) {
+        if (plugin.getCooldownManager().hasCooldown(player.getUniqueId()) && 
+            !player.hasPermission("easytpa.cooldown.bypass")) {
             String timeLeft = plugin.getCooldownManager().getRemainingTimeString(player.getUniqueId());
-            sender.sendMessage(MessageUtils.formatMessage(
+            MessageUtils.sendMessage(player,
                 plugin.getConfigManager().getMessage("cooldown"), 
                 "time", timeLeft
-            ));
+            );
             return true;
         }
 
         if (plugin.getTPAManager().sendRequest(player, target)) {
             plugin.getCooldownManager().setCooldown(player.getUniqueId());
             
-            sender.sendMessage(MessageUtils.formatMessage(
+            MessageUtils.sendMessage(player,
                 plugin.getConfigManager().getMessage("request-sent"), 
                 "player", target.getName()
-            ));
+            );
             MessageUtils.sendTeleportRequest(player, target);
         }
 
