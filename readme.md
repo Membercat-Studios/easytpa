@@ -65,7 +65,7 @@ messages:
 
 ## 🚀 Installation
 
-1. Download the plugin from the [releases page](https://github.com/yourusername/easytpa/releases)
+1. Download the plugin from the [releases page](https://github.com/Membercat-Studios/easytpa/releases)
 2. Place the JAR file in your server's `plugins` folder
 3. Restart your server
 4. Optionally configure in `plugins/EasyTPA/config.yml`
@@ -87,7 +87,7 @@ messages:
 ## 🛠️ Building from Source
 
 ```bash
-git clone https://github.com/yourusername/easytpa.git
+git clone https://github.com/Membercat-Studios/easytpa.git
 
 # build a shaded jar with gradle
 ./gradlew shadowJar
@@ -97,7 +97,7 @@ git clone https://github.com/yourusername/easytpa.git
 
 ## 📝 Support
 
-If you encounter issues or have suggestions, please [open an issue](https://github.com/yourusername/easytpa/issues) with:
+If you encounter issues or have suggestions, please [open an issue](https://github.com/Membercat-Studios/easytpa/issues) with:
 
 - Server version
 - Plugin version
