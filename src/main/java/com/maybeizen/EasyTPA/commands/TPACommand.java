@@ -67,8 +67,8 @@ public class TPACommand implements CommandExecutor {
             plugin.getCooldownManager().setCooldown(player.getUniqueId());
             
             MessageUtils.sendMessage(player,
-                plugin.getConfigManager().getMessage("request-sent"), 
-                "player", target.getName()
+                plugin.getConfigManager().getMessage("request-sent", player, 
+                "player", target.getName())
             );
             MessageUtils.sendTeleportRequest(player, target);
         }

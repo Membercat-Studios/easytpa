@@ -2,6 +2,7 @@ package com.maybeizen.EasyTPA.utils;
 
 import com.maybeizen.EasyTPA.EasyTPA;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 public class ConfigManager {
     private static ConfigManager instance;
@@ -37,9 +38,26 @@ public class ConfigManager {
         return config.getString("messages." + path, "Message not found: " + path);
     }
 
+    public String getMessage(String path, Player player) {
+        return getMessage(path);
+    }
+
     public String getMessage(String path, String... placeholders) {
+        if (placeholders.length % 2 != 0) {
+            throw new IllegalArgumentException("Placeholders must be in pairs of key-value");
+        }
+
         String message = getMessage(path);
-        return message.contains("%") ? message : message;
+        
+        for (int i = 0; i < placeholders.length; i += 2) {
+            message = message.replace("%" + placeholders[i] + "%", placeholders[i + 1]);
+        }
+        
+        return message;
+    }
+
+    public String getMessage(String path, Player player, String... placeholders) {
+        return getMessage(path, placeholders);
     }
 
     public int getRequestTimeout() {
