@@ -38,7 +38,7 @@ tasks.shadowJar {
     archiveClassifier.set('')
     archiveVersion.set(pluginVersion)
     
-    finalizedBy 'copyToTestServer'
+    // finalizedBy 'copyToTestServer'
 }
 
 tasks.register('copyToTestServer', Copy) {
