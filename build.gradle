@@ -31,19 +31,19 @@ def pluginVersion = file('src/main/resources/plugin.yml').readLines()
     ?.substring('version:'.length())
     ?.trim() ?: '1.0.0'
 
-def testServerPlugins = 'home/maybeizen/Documents/dev/testserver-1.21.9/plugins'
+def testServerPlugins = '/home/maybeizen/Documents/testserver-1.21.9/plugins'
 
 tasks.shadowJar {
     archiveBaseName.set('EasyTPA')
     archiveClassifier.set('')
     archiveVersion.set(pluginVersion)
     
-    // doLast {
-    //     copy {
-    //         from archiveFile
-    //         into testServerPlugins
-    //     }
-    // }
+    finalizedBy 'copyToTestServer'
+}
+
+tasks.register('copyToTestServer', Copy) {
+    from tasks.shadowJar.archiveFile
+    into testServerPlugins
 }
 
 tasks.build {

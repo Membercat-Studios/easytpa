@@ -1,5 +1,6 @@
 package com.maybeizen.EasyTPA.managers;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 public class TPAManager {
     private final EasyTPA plugin;
-    private final Map<UUID, UUID> tpaRequests; // target -> sender
+    private final Map<UUID, TPARequest> tpaRequests; // target > TPARequest
     private final Map<UUID, Long> cooldowns;
 
     public TPAManager(EasyTPA plugin) {
@@ -47,7 +48,8 @@ public class TPAManager {
             return false;
         }
 
-        tpaRequests.put(targetUUID, senderUUID);
+        TPARequest request = new TPARequest(senderUUID, targetUUID, target.getLocation());
+        tpaRequests.put(targetUUID, request);
         
         if (!sender.hasPermission("easytpa.cooldown.bypass")) {
             setCooldown(sender);
@@ -56,7 +58,8 @@ public class TPAManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (tpaRequests.containsKey(targetUUID) && tpaRequests.get(targetUUID).equals(senderUUID)) {
+                TPARequest request = tpaRequests.get(targetUUID);
+                if (request != null && request.isFrom(senderUUID)) {
                     tpaRequests.remove(targetUUID);
                     MessageUtils.sendMessage(sender, plugin.getConfigManager().getMessage("request-expired"));
                     if (target.isOnline()) {
@@ -71,37 +74,37 @@ public class TPAManager {
 
     public boolean acceptRequest(Player target) {
         UUID targetUUID = target.getUniqueId();
-        if (!tpaRequests.containsKey(targetUUID)) {
+        TPARequest request = tpaRequests.get(targetUUID);
+        if (request == null) {
             MessageUtils.sendMessage(target, plugin.getConfigManager().getMessage("no-pending-request"));
             return false;
         }
 
-        UUID senderUUID = tpaRequests.get(targetUUID);
-        Player sender = plugin.getServer().getPlayer(senderUUID);
-
+        Player sender = plugin.getServer().getPlayer(request.getSenderUUID());
         if (sender == null || !sender.isOnline()) {
             MessageUtils.sendMessage(target, plugin.getConfigManager().getMessage("player-offline"));
             tpaRequests.remove(targetUUID);
             return false;
         }
 
-        return performTeleport(sender, target);
+        return performTeleport(sender, request.getTargetLocation(), target);
     }
     
     public boolean acceptRequestFrom(Player target, Player requester) {
         UUID targetUUID = target.getUniqueId();
         UUID requesterUUID = requester.getUniqueId();
         
-        if (!tpaRequests.containsKey(targetUUID) || !tpaRequests.get(targetUUID).equals(requesterUUID)) {
+        TPARequest request = tpaRequests.get(targetUUID);
+        if (request == null || !request.isFrom(requesterUUID)) {
             MessageUtils.sendMessage(target, plugin.getConfigManager().getMessage("no-pending-request"));
             return false;
         }
         
-        return performTeleport(requester, target);
+        return performTeleport(requester, request.getTargetLocation(), target);
     }
 
-    private boolean performTeleport(Player sender, Player target) {
-        sender.teleport(target.getLocation());
+    private boolean performTeleport(Player sender, Location targetLocation, Player target) {
+        sender.teleport(targetLocation);
         
         MessageUtils.sendMessage(sender,
             plugin.getConfigManager().getMessage("request-accepted"), 
@@ -122,12 +125,12 @@ public class TPAManager {
 
     public String denyRequest(Player target) {
         UUID targetUUID = target.getUniqueId();
-        if (!tpaRequests.containsKey(targetUUID)) {
+        TPARequest request = tpaRequests.get(targetUUID);
+        if (request == null) {
             return null;
         }
 
-        UUID senderUUID = tpaRequests.get(targetUUID);
-        Player sender = plugin.getServer().getPlayer(senderUUID);
+        Player sender = plugin.getServer().getPlayer(request.getSenderUUID());
         String senderName = sender != null ? sender.getName() : "Unknown";
 
         tpaRequests.remove(targetUUID);
@@ -146,7 +149,8 @@ public class TPAManager {
         UUID targetUUID = target.getUniqueId();
         UUID requesterUUID = requester.getUniqueId();
         
-        if (!tpaRequests.containsKey(targetUUID) || !tpaRequests.get(targetUUID).equals(requesterUUID)) {
+        TPARequest request = tpaRequests.get(targetUUID);
+        if (request == null || !request.isFrom(requesterUUID)) {
             MessageUtils.sendMessage(target, plugin.getConfigManager().getMessage("no-pending-request"));
             return false;
         }
