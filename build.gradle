@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT'
-    implementation "net.kyori:adventure-api:4.14.0"
+    implementation "net.kyori:adventure-api:4.25.0"
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 
@@ -31,7 +31,7 @@ def pluginVersion = file('src/main/resources/plugin.yml').readLines()
     ?.substring('version:'.length())
     ?.trim() ?: '1.0.0'
 
-def testServerPlugins = 'E:/testserver 1.21.4/plugins'
+def testServerPlugins = 'home/maybeizen/Documents/dev/testserver-1.21.9/plugins'
 
 tasks.shadowJar {
     archiveBaseName.set('EasyTPA')
