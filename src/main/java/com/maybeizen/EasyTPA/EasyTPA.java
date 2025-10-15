@@ -5,7 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.maybeizen.EasyTPA.commands.*;
 import com.maybeizen.EasyTPA.utils.ConfigManager;
 import com.maybeizen.EasyTPA.utils.DatabaseManager;
-import com.maybeizen.EasyTPA.utils.DataMigrationUtil;
 import com.maybeizen.EasyTPA.managers.TPAManager;
 import com.maybeizen.EasyTPA.managers.CooldownManager;
 import com.maybeizen.EasyTPA.managers.ToggleManager;
@@ -25,8 +24,6 @@ public class EasyTPA extends JavaPlugin {
         
         this.configManager = ConfigManager.getInstance(this);
         this.databaseManager = new DatabaseManager(this);
-        
-        runDataMigration();
         
         MessageUtils.initialize(this);
         
@@ -80,15 +77,6 @@ public class EasyTPA extends JavaPlugin {
         
         MessageUtils.initialize(this);
         
-    }
-
-    private void runDataMigration() {
-        DataMigrationUtil migrationUtil = new DataMigrationUtil(this);
-        int migratedEntries = migrationUtil.migrateToggleData();
-        
-        if (migratedEntries > 0) {
-            getLogger().info("Data migration complete: " + migratedEntries + " entries migrated to SQLite database");
-        }
     }
 
     public ConfigManager getConfigManager() {
