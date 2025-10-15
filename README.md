@@ -8,7 +8,7 @@
   [![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.java.com/)
 </div>
 
-## ✨ Features
+## Features
 
 - **Simple Commands** - `/tpa`, `/tpaccept`, `/tpdeny` and more
 - **Interactive UI** - Clickable accept/deny buttons with hover text
@@ -19,7 +19,7 @@
 - **Reliable** - Request timeout and cooldown systems
 - **Multi-version** - Support for Minecraft 1.19.4 through 1.21.4
 
-## 📋 Commands
+## Commands
 
 | Command              | Description                     | Permission         |
 | -------------------- | ------------------------------- | ------------------ |
@@ -29,7 +29,7 @@
 | `/tptoggle`          | Toggle teleport requests on/off | `easytpa.toggle`   |
 | `/easytpa reload`    | Reload the plugin configuration | `easytpa.admin`    |
 
-## 🔑 Permissions
+## Permissions
 
 ### Basic Permissions
 
@@ -48,7 +48,7 @@
 
 - `easytpa.*` - All EasyTPA permissions (default: op)
 
-## ⚙️ Configuration
+## Configuration
 
 ```yaml
 # Time settings
@@ -63,28 +63,7 @@ messages:
   # ... and many more messages
 ```
 
-## 🚀 Installation
-
-1. Download the plugin from the [releases page](https://github.com/Membercat-Studios/easytpa/releases)
-2. Place the JAR file in your server's `plugins` folder
-3. Restart your server
-4. Optionally configure in `plugins/EasyTPA/config.yml`
-
-## 🔧 Troubleshooting
-
-<details>
-<summary><b>Permission Issues</b></summary>
-<p><b>Problem:</b> Commands not working for players<br>
-<b>Solution:</b> Check permissions with <code>/lp user &lt;player&gt; permission info easytpa</code></p>
-</details>
-
-<details>
-<summary><b>Plugin Not Loading</b></summary>
-<p><b>Problem:</b> Plugin fails to load on startup<br>
-<b>Solution:</b> Check console for errors and verify you're using compatible Java and Minecraft versions</p>
-</details>
-
-## 🛠️ Building from Source
+## Building from Source
 
 ```bash
 git clone https://github.com/Membercat-Studios/easytpa.git
@@ -95,7 +74,7 @@ git clone https://github.com/Membercat-Studios/easytpa.git
 # find the bundled jarfile in build/libs/
 ```
 
-## 📝 Support
+## Support
 
 If you encounter issues or have suggestions, please [open an issue](https://github.com/Membercat-Studios/easytpa/issues) with:
 
@@ -105,16 +84,14 @@ If you encounter issues or have suggestions, please [open an issue](https://gith
 - Error messages (if any)
 - Steps to reproduce
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](license) file for details.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to submit pull requests or open issues for bugs and feature requests.
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/maybeizen">maybeizen</a></p>
-</div>
+Made with ❤️ by [maybeizen](https://maybeizen.space)
