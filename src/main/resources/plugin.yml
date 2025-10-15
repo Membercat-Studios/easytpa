@@ -1,5 +1,5 @@
 name: EasyTPA
-version: 1.2.0
+version: 1.2.1
 main: com.maybeizen.EasyTPA.EasyTPA
 api-version: "1.19"
 authors: [maybeizen]
