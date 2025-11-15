@@ -4,18 +4,18 @@ import com.maybeizen.EasyTPA.EasyTPA;
 import com.maybeizen.EasyTPA.utils.DatabaseManager;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ToggleManager {
     private final EasyTPA plugin;
-    private final HashMap<UUID, Boolean> toggleStates;
+    private final ConcurrentHashMap<UUID, Boolean> toggleStates;
     private final DatabaseManager databaseManager;
 
     public ToggleManager(EasyTPA plugin) {
         this.plugin = plugin;
-        this.toggleStates = new HashMap<>();
+        this.toggleStates = new ConcurrentHashMap<>();
         this.databaseManager = plugin.getDatabaseManager();
         loadData();
     }
@@ -25,18 +25,17 @@ public class ToggleManager {
         
         databaseManager.reconnectIfNeeded();
         
-        Map<UUID, Boolean> loadedStates = databaseManager.loadAllToggleStates();
-        toggleStates.putAll(loadedStates);
-        
+        databaseManager.loadAllToggleStatesAsync(loadedStates -> {
+            toggleStates.putAll(loadedStates);
+        });
     }
 
     public void saveData() {
         databaseManager.reconnectIfNeeded();
         
         for (Map.Entry<UUID, Boolean> entry : toggleStates.entrySet()) {
-            databaseManager.saveToggleState(entry.getKey(), entry.getValue());
+            databaseManager.saveToggleStateAsync(entry.getKey(), entry.getValue(), null);
         }
-        
     }
 
     public boolean isTPEnabled(Player player) {
@@ -48,6 +47,11 @@ public class ToggleManager {
         
         boolean enabled = databaseManager.getToggleState(uuid);
         toggleStates.put(uuid, enabled);
+        
+        databaseManager.getToggleStateAsync(uuid, result -> {
+            toggleStates.put(uuid, result);
+        });
+        
         return enabled;
     }
 
@@ -57,7 +61,7 @@ public class ToggleManager {
         
         toggleStates.put(uuid, newState);
         
-        databaseManager.saveToggleState(uuid, newState);
+        databaseManager.saveToggleStateAsync(uuid, newState, null);
         
         return newState;
     }

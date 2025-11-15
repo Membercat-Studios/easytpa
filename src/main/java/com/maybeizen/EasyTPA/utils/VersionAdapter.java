@@ -14,18 +14,28 @@ public class VersionAdapter {
     }
 
     public static void playRequestSound(Player player) {
-        if (IS_LEGACY) {
-            player.playSound(player.getLocation(), Sound.valueOf("BLOCK_NOTE_BLOCK_PLING"), 1.0f, 1.0f);
-        } else {
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+        try {
+            if (IS_LEGACY) {
+                Sound sound = Sound.valueOf("BLOCK_NOTE_BLOCK_PLING");
+                player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
+            } else {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+            }
+        } catch (IllegalArgumentException e) {
+            // Sound doesn't exist in this version, silently fail
         }
     }
 
     public static void playTeleportSound(Player player) {
-        if (IS_LEGACY) {
-            player.playSound(player.getLocation(), Sound.valueOf("ENTITY_ENDERMAN_TELEPORT"), 1.0f, 1.0f);
-        } else {
-            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
+        try {
+            if (IS_LEGACY) {
+                Sound sound = Sound.valueOf("ENTITY_ENDERMAN_TELEPORT");
+                player.playSound(player.getLocation(), sound, 1.0f, 1.0f);
+            } else {
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f, 1.0f);
+            }
+        } catch (IllegalArgumentException e) {
+            // Sound doesn't exist in this version, silently fail
         }
     }
 

@@ -7,19 +7,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.maybeizen.EasyTPA.EasyTPA;
 import com.maybeizen.EasyTPA.utils.MessageUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TPAManager {
     private final EasyTPA plugin;
     private final Map<UUID, TPARequest> tpaRequests; // target > TPARequest
-    private final Map<UUID, Long> cooldowns;
+    private final Map<UUID, BukkitRunnable> pendingTeleports; // sender > teleport task
 
     public TPAManager(EasyTPA plugin) {
         this.plugin = plugin;
-        this.tpaRequests = new HashMap<>();
-        this.cooldowns = new HashMap<>();
+        this.tpaRequests = new ConcurrentHashMap<>();
+        this.pendingTeleports = new ConcurrentHashMap<>();
     }
 
     public boolean sendRequest(Player sender, Player target) {
@@ -34,8 +34,9 @@ public class TPAManager {
             return false;
         }
 
-        if (!sender.hasPermission("easytpa.cooldown.bypass") && isOnCooldown(sender)) {
-            long remainingTime = (cooldowns.get(senderUUID) - System.currentTimeMillis()) / 1000;
+        if (!sender.hasPermission("easytpa.cooldown.bypass") && 
+            plugin.getCooldownManager().hasCooldown(senderUUID)) {
+            long remainingTime = plugin.getCooldownManager().getRemainingTime(senderUUID) / 1000;
             MessageUtils.sendMessage(sender,
                 plugin.getConfigManager().getMessage("cooldown"), 
                 "time", String.valueOf(remainingTime)
@@ -52,18 +53,23 @@ public class TPAManager {
         tpaRequests.put(targetUUID, request);
         
         if (!sender.hasPermission("easytpa.cooldown.bypass")) {
-            setCooldown(sender);
+            plugin.getCooldownManager().setCooldown(senderUUID);
         }
 
+        UUID finalTargetUUID = targetUUID;
         new BukkitRunnable() {
             @Override
             public void run() {
-                TPARequest request = tpaRequests.get(targetUUID);
+                TPARequest request = tpaRequests.get(finalTargetUUID);
                 if (request != null && request.isFrom(senderUUID)) {
-                    tpaRequests.remove(targetUUID);
-                    MessageUtils.sendMessage(sender, plugin.getConfigManager().getMessage("request-expired"));
-                    if (target.isOnline()) {
-                        MessageUtils.sendMessage(target, plugin.getConfigManager().getMessage("request-expired-target"));
+                    tpaRequests.remove(finalTargetUUID);
+                    Player senderPlayer = plugin.getServer().getPlayer(senderUUID);
+                    Player targetPlayer = plugin.getServer().getPlayer(finalTargetUUID);
+                    if (senderPlayer != null && senderPlayer.isOnline()) {
+                        MessageUtils.sendMessage(senderPlayer, plugin.getConfigManager().getMessage("request-expired"));
+                    }
+                    if (targetPlayer != null && targetPlayer.isOnline()) {
+                        MessageUtils.sendMessage(targetPlayer, plugin.getConfigManager().getMessage("request-expired-target"));
                     }
                 }
             }
@@ -104,6 +110,82 @@ public class TPAManager {
     }
 
     private boolean performTeleport(Player sender, Location targetLocation, Player target) {
+        UUID senderUUID = sender.getUniqueId();
+        
+        if (pendingTeleports.containsKey(senderUUID)) {
+            MessageUtils.sendMessage(sender, plugin.getConfigManager().getMessage("teleport-already-pending"));
+            return false;
+        }
+        
+        if (!isSafeLocation(targetLocation)) {
+            MessageUtils.sendMessage(sender, 
+                plugin.getConfigManager().getMessage("teleport-unsafe", "player", target.getName()));
+            MessageUtils.sendMessage(target,
+                plugin.getConfigManager().getMessage("teleport-unsafe-target", "player", sender.getName()));
+            tpaRequests.remove(target.getUniqueId());
+            return false;
+        }
+        
+        int delay = plugin.getConfigManager().getTeleportDelay();
+        tpaRequests.remove(target.getUniqueId());
+        
+        if (delay <= 0 || sender.hasPermission("easytpa.delay.bypass")) {
+            executeTeleport(sender, targetLocation, target);
+            return true;
+        }
+        
+        MessageUtils.sendMessage(sender,
+            plugin.getConfigManager().getMessage("teleport-starting", "time", String.valueOf(delay)));
+        MessageUtils.sendMessage(target,
+            plugin.getConfigManager().getMessage("teleport-starting-target", "player", sender.getName(), "time", String.valueOf(delay)));
+        
+        Location startLocation = sender.getLocation().clone();
+        BukkitRunnable teleportTask = new BukkitRunnable() {
+            private int countdown = delay;
+            
+            @Override
+            public void run() {
+                if (!sender.isOnline() || !target.isOnline()) {
+                    cancelTeleport(senderUUID);
+                    return;
+                }
+                
+                if (!sender.getLocation().getWorld().equals(startLocation.getWorld()) ||
+                    sender.getLocation().distanceSquared(startLocation) > 1.0) {
+                    cancelTeleport(senderUUID);
+                    MessageUtils.sendMessage(sender, plugin.getConfigManager().getMessage("teleport-cancelled-moved"));
+                    MessageUtils.sendMessage(target, 
+                        plugin.getConfigManager().getMessage("teleport-cancelled-moved-target", "player", sender.getName()));
+                    return;
+                }
+                
+                countdown--;
+                if (countdown <= 0) {
+                    executeTeleport(sender, targetLocation, target);
+                    pendingTeleports.remove(senderUUID);
+                    this.cancel();
+                } else if (countdown <= 3) {
+                    MessageUtils.sendMessage(sender,
+                        plugin.getConfigManager().getMessage("teleport-countdown", "time", String.valueOf(countdown)));
+                }
+            }
+        };
+        
+        pendingTeleports.put(senderUUID, teleportTask);
+        teleportTask.runTaskTimer(plugin, 0L, 20L);
+        
+        return true;
+    }
+    
+    private void executeTeleport(Player sender, Location targetLocation, Player target) {
+        if (!isSafeLocation(targetLocation)) {
+            MessageUtils.sendMessage(sender, 
+                plugin.getConfigManager().getMessage("teleport-unsafe", "player", target.getName()));
+            MessageUtils.sendMessage(target,
+                plugin.getConfigManager().getMessage("teleport-unsafe-target", "player", sender.getName()));
+            return;
+        }
+        
         sender.teleport(targetLocation);
         
         MessageUtils.sendMessage(sender,
@@ -117,10 +199,53 @@ public class TPAManager {
         );
         
         MessageUtils.playTeleportEffect(sender);
+    }
+    
+    public boolean cancelTeleport(UUID senderUUID) {
+        BukkitRunnable task = pendingTeleports.remove(senderUUID);
+        if (task != null) {
+            task.cancel();
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isSafeLocation(Location location) {
+        if (location == null) {
+            return false;
+        }
         
-        tpaRequests.remove(target.getUniqueId());
+        org.bukkit.block.Block blockAtFeet = location.getBlock();
+        org.bukkit.block.Block blockAtHead = location.clone().add(0, 1, 0).getBlock();
+        
+        if (blockAtFeet.getType().isSolid() || blockAtHead.getType().isSolid()) {
+            return false;
+        }
+        
+        org.bukkit.block.Block blockBelow = location.clone().subtract(0, 1, 0).getBlock();
+        if (blockBelow.getType().isAir()) {
+            return false;
+        }
         
         return true;
+    }
+    
+    public TPARequest getRequestBySender(UUID senderUUID) {
+        for (TPARequest request : tpaRequests.values()) {
+            if (request.isFrom(senderUUID)) {
+                return request;
+            }
+        }
+        return null;
+    }
+    
+    public boolean cancelRequestBySender(UUID senderUUID) {
+        TPARequest request = getRequestBySender(senderUUID);
+        if (request != null) {
+            tpaRequests.remove(request.getTargetUUID());
+            return true;
+        }
+        return false;
     }
 
     public String denyRequest(Player target) {
@@ -167,16 +292,19 @@ public class TPAManager {
 
     public void clearAllRequests() {
         tpaRequests.clear();
-        cooldowns.clear();
+        for (BukkitRunnable task : pendingTeleports.values()) {
+            task.cancel();
+        }
+        pendingTeleports.clear();
     }
-
-    private boolean isOnCooldown(Player player) {
-        UUID uuid = player.getUniqueId();
-        return cooldowns.containsKey(uuid) && cooldowns.get(uuid) > System.currentTimeMillis();
-    }
-
-    private void setCooldown(Player player) {
-        UUID uuid = player.getUniqueId();
-        cooldowns.put(uuid, System.currentTimeMillis() + (plugin.getConfigManager().getCooldown() * 1000L));
+    
+    public java.util.List<TPARequest> getRequestsForPlayer(UUID playerUUID) {
+        java.util.List<TPARequest> requests = new java.util.ArrayList<>();
+        for (TPARequest request : tpaRequests.values()) {
+            if (request.getTargetUUID().equals(playerUUID) || request.isFrom(playerUUID)) {
+                requests.add(request);
+            }
+        }
+        return requests;
     }
 } 

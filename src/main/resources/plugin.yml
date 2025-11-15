@@ -1,5 +1,5 @@
 name: EasyTPA
-version: 1.2.2-Beta
+version: v1.3.0-Beta
 main: com.maybeizen.EasyTPA.EasyTPA
 api-version: "1.19"
 authors: [maybeizen]
@@ -21,6 +21,14 @@ commands:
     description: Toggle teleport requests on/off
     usage: /tptoggle
     permission: easytpa.toggle
+  tpcancel:
+    description: Cancel your pending teleport request or teleport
+    usage: /tpcancel
+    permission: easytpa.tpa
+  tplist:
+    description: List your pending teleport requests
+    usage: /tplist
+    permission: easytpa.tpa
   easytpa:
     description: Admin commands for EasyTPA
     usage: /easytpa reload
@@ -53,6 +61,9 @@ permissions:
   easytpa.cooldown.bypass:
     description: Allows bypassing the cooldown between teleport requests
     default: op
+  easytpa.delay.bypass:
+    description: Allows bypassing the teleport delay
+    default: op
   easytpa.*:
     description: Grants all EasyTPA permissions
     default: op
@@ -64,3 +75,4 @@ permissions:
       easytpa.admin: true
       easytpa.bypass: true
       easytpa.cooldown.bypass: true
+      easytpa.delay.bypass: true

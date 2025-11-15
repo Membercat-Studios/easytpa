@@ -2,6 +2,7 @@ package com.maybeizen.EasyTPA;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import com.maybeizen.EasyTPA.commands.*;
 import com.maybeizen.EasyTPA.utils.ConfigManager;
 import com.maybeizen.EasyTPA.utils.DatabaseManager;
@@ -35,10 +36,14 @@ public class EasyTPA extends JavaPlugin {
         getCommand("tpaccept").setExecutor(new TPAcceptCommand(this));
         getCommand("tpdeny").setExecutor(new TPDenyCommand(this));
         getCommand("tptoggle").setExecutor(new TPToggleCommand(this));
+        getCommand("tpcancel").setExecutor(new TPCancelCommand(this));
+        getCommand("tplist").setExecutor(new TPListCommand(this));
         
         EasyTPACommand adminCommand = new EasyTPACommand(this);
         getCommand("easytpa").setExecutor(adminCommand);
         getCommand("easytpa").setTabCompleter(adminCommand);
+        
+        startCleanupTask();
         
         Bukkit.getLogger().info("EasyTPA has been enabled!");
         Bukkit.getLogger().info("Running on server version: " + VersionAdapter.getServerVersion());
@@ -97,6 +102,22 @@ public class EasyTPA extends JavaPlugin {
 
     public ToggleManager getToggleManager() {
         return toggleManager;
+    }
+    
+    private void startCleanupTask() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (cooldownManager != null) {
+                    int before = cooldownManager.getActiveCooldownCount();
+                    cooldownManager.cleanupExpired();
+                    int after = cooldownManager.getActiveCooldownCount();
+                    if (before > after) {
+                        getLogger().fine("Cleaned up " + (before - after) + " expired cooldowns");
+                    }
+                }
+            }
+        }.runTaskTimer(this, 6000L, 6000L); // Run every 5 minutes (6000 ticks)
     }
 }
 

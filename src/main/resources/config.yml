@@ -4,6 +4,7 @@
 settings:
   request-timeout: 60 # time in seconds before a request expires
   cooldown: 30 # time in seconds between teleport requests
+  teleport-delay: 3 # time in seconds before teleport executes (0 to disable)
   enable-sounds: true # whether to play sounds for teleport events
 
 messages:
@@ -51,6 +52,24 @@ messages:
   hover-text-accept: "&aClick to accept the teleport request"
   hover-text-deny: "&cClick to deny the teleport request"
 
+  # Teleport delay messages
+  teleport-starting: "&eTeleporting in &6%time% &eseconds... Don't move!"
+  teleport-starting-target: "&e%player% &eis teleporting to you in &6%time% &eseconds."
+  teleport-countdown: "&eTeleporting in &6%time% &eseconds..."
+  teleport-cancelled-moved: "&cTeleport cancelled! You moved."
+  teleport-cancelled-moved-target: "&c%player%'s teleport was cancelled (they moved)."
+  teleport-already-pending: "&cYou already have a teleport in progress!"
+  teleport-cancelled: "&aTeleport cancelled."
+  
+  # Request cancellation messages
+  request-cancelled: "&aYour teleport request has been cancelled."
+  nothing-to-cancel: "&cYou have nothing to cancel."
+  
+  # Request list messages
+  request-list-header: "&6--- Your Teleport Requests ---"
+  request-list-received: "&7Received from: &e%player%"
+  request-list-sent: "&7Sent to: &e%player%"
+  
   # Admin messages
   config-reloading: "&eReloading EasyTPA configuration..."
   config-reloaded: "&aConfiguration has been reloaded successfully!"

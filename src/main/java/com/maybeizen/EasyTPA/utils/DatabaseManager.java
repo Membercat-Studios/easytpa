@@ -19,6 +19,7 @@ public class DatabaseManager {
     private final EasyTPA plugin;
     private Connection connection;
     private final String dbFile;
+    private final Object dbLock = new Object();
     
     private static final String CREATE_TOGGLE_TABLE = 
             "CREATE TABLE IF NOT EXISTS toggle_states (" +
@@ -75,52 +76,117 @@ public class DatabaseManager {
     }
     
     public void saveToggleState(UUID uuid, boolean enabled) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_TOGGLE)) {
-            statement.setString(1, uuid.toString());
-            statement.setBoolean(2, enabled);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.WARNING, "Error saving toggle state for " + uuid, e);
-        }
+        saveToggleStateAsync(uuid, enabled, null);
+    }
+    
+    public void saveToggleStateAsync(UUID uuid, boolean enabled, Runnable callback) {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            synchronized (dbLock) {
+                if (connection == null) {
+                    plugin.getLogger().warning("Cannot save toggle state: database connection is null");
+                    if (callback != null) {
+                        plugin.getServer().getScheduler().runTask(plugin, callback);
+                    }
+                    return;
+                }
+                try (PreparedStatement statement = connection.prepareStatement(INSERT_TOGGLE)) {
+                    statement.setString(1, uuid.toString());
+                    statement.setBoolean(2, enabled);
+                    statement.executeUpdate();
+                } catch (SQLException e) {
+                    plugin.getLogger().log(Level.WARNING, "Error saving toggle state for " + uuid, e);
+                } finally {
+                    if (callback != null) {
+                        plugin.getServer().getScheduler().runTask(plugin, callback);
+                    }
+                }
+            }
+        });
     }
 
     public Map<UUID, Boolean> loadAllToggleStates() {
+        return loadAllToggleStatesAsync(null);
+    }
+    
+    public Map<UUID, Boolean> loadAllToggleStatesAsync(java.util.function.Consumer<Map<UUID, Boolean>> callback) {
         Map<UUID, Boolean> toggleStates = new HashMap<>();
         
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SELECT_ALL_TOGGLES)) {
-            
-            while (resultSet.next()) {
-                try {
-                    UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-                    boolean enabled = resultSet.getBoolean("enabled");
-                    toggleStates.put(uuid, enabled);
-                } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("Invalid UUID in database: " + resultSet.getString("uuid"));
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            Map<UUID, Boolean> loadedStates = new HashMap<>();
+            synchronized (dbLock) {
+                if (connection == null) {
+                    plugin.getLogger().warning("Cannot load toggle states: database connection is null");
+                    if (callback != null) {
+                        plugin.getServer().getScheduler().runTask(plugin, () -> callback.accept(loadedStates));
+                    }
+                    return;
+                }
+                
+                try (Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery(SELECT_ALL_TOGGLES)) {
+                    
+                    while (resultSet.next()) {
+                        try {
+                            UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                            boolean enabled = resultSet.getBoolean("enabled");
+                            loadedStates.put(uuid, enabled);
+                        } catch (IllegalArgumentException e) {
+                            plugin.getLogger().warning("Invalid UUID in database: " + resultSet.getString("uuid"));
+                        }
+                    }
+                    
+                } catch (SQLException e) {
+                    plugin.getLogger().log(Level.WARNING, "Error loading toggle states", e);
                 }
             }
             
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.WARNING, "Error loading toggle states", e);
-        }
+            if (callback != null) {
+                Map<UUID, Boolean> finalStates = new HashMap<>(loadedStates);
+                plugin.getServer().getScheduler().runTask(plugin, () -> callback.accept(finalStates));
+            }
+        });
         
         return toggleStates;
     }
 
     public boolean getToggleState(UUID uuid) {
-        try (PreparedStatement statement = connection.prepareStatement(SELECT_TOGGLE)) {
-            statement.setString(1, uuid.toString());
-            
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getBoolean("enabled");
+        return getToggleStateAsync(uuid, null);
+    }
+    
+    public boolean getToggleStateAsync(UUID uuid, java.util.function.Consumer<Boolean> callback) {
+        final boolean[] result = {true};
+        
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            boolean queryResult = true;
+            synchronized (dbLock) {
+                if (connection == null) {
+                    plugin.getLogger().warning("Cannot get toggle state: database connection is null");
+                    if (callback != null) {
+                        plugin.getServer().getScheduler().runTask(plugin, () -> callback.accept(true));
+                    }
+                    return;
+                }
+                try (PreparedStatement statement = connection.prepareStatement(SELECT_TOGGLE)) {
+                    statement.setString(1, uuid.toString());
+                    
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            queryResult = resultSet.getBoolean("enabled");
+                        }
+                    }
+                } catch (SQLException e) {
+                    plugin.getLogger().log(Level.WARNING, "Error getting toggle state for " + uuid, e);
                 }
             }
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.WARNING, "Error getting toggle state for " + uuid, e);
-        }
+            
+            if (callback != null) {
+                boolean finalResult = queryResult;
+                plugin.getServer().getScheduler().runTask(plugin, () -> callback.accept(finalResult));
+            }
+            result[0] = queryResult;
+        });
         
-        return true;
+        return result[0];
     }
     
     public boolean isConnectionValid() {

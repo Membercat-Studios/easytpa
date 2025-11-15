@@ -20,12 +20,6 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 def pluginVersion = file('src/main/resources/plugin.yml').readLines()
     .find { it.startsWith('version:') }
     ?.substring('version:'.length())

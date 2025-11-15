@@ -30,9 +30,6 @@ public class MessageUtils {
     
     private static Component getPrefix() {        
         String prefix = plugin.getConfigManager().getMessage("prefix");
-        if (prefix.equals("Message not found: prefix")) {
-            prefix = plugin.getConfigManager().getDefaultPrefix();
-        }
         return parseText(prefix);
     }
 

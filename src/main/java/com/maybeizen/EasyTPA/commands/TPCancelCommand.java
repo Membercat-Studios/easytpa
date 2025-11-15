@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import com.maybeizen.EasyTPA.EasyTPA;
 import com.maybeizen.EasyTPA.utils.MessageUtils;
 
-public class TPACommand implements CommandExecutor {
+public class TPCancelCommand implements CommandExecutor {
     private final EasyTPA plugin;
 
-    public TPACommand(EasyTPA plugin) {
+    public TPCancelCommand(EasyTPA plugin) {
         this.plugin = plugin;
     }
 
@@ -22,37 +22,24 @@ public class TPACommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-
+        
         if (!player.hasPermission("easytpa.tpa")) {
             MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("no-permission"));
             return true;
         }
-
-        if (args.length != 1) {
-            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("tpa-usage"));
+        
+        if (plugin.getTPAManager().cancelTeleport(player.getUniqueId())) {
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("teleport-cancelled"));
             return true;
         }
-
-        Player target = plugin.getServer().getPlayer(args[0]);
-
-        if (target == null) {
-            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("player-not-found"));
+        
+        if (plugin.getTPAManager().cancelRequestBySender(player.getUniqueId())) {
+            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("request-cancelled"));
             return true;
         }
-
-        if (target.equals(player)) {
-            MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("cannot-teleport-self"));
-            return true;
-        }
-
-        if (plugin.getTPAManager().sendRequest(player, target)) {
-            MessageUtils.sendMessage(player,
-                plugin.getConfigManager().getMessage("request-sent", player, 
-                "player", target.getName())
-            );
-            MessageUtils.sendTeleportRequest(player, target);
-        }
-
+        
+        MessageUtils.sendMessage(player, plugin.getConfigManager().getMessage("nothing-to-cancel"));
         return true;
     }
-} 
+}
+

@@ -3,31 +3,33 @@
   <h1>EasyTPA</h1>
   <p><strong>Simple, powerful teleport requests for Minecraft servers</strong></p>
   
-  [![Minecraft](https://img.shields.io/badge/Minecraft-1.19.4--1.21.4-brightgreen)](https://www.minecraft.net/)
+  [![Minecraft](https://img.shields.io/badge/Minecraft-1.19.4--1.21.X-brightgreen)](https://www.minecraft.net/)
   [![License](https://img.shields.io/badge/License-MIT-blue.svg)](license)
   [![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.java.com/)
 </div>
 
 ## Features
 
-- **Simple Commands** - `/tpa`, `/tpaccept`, `/tpdeny` and more
+- **Simple Commands** - `/tpa`, `/tpaccept`, `/tpdeny`, `/tpcancel`, `/tplist` and more
 - **Interactive UI** - Clickable accept/deny buttons with hover text
 - **Sound Effects** - Audio feedback for requests and teleportation
 - **Customizable** - Fully configurable messages and settings
-- **Performance** - Lightweight with minimal resource usage
+- **Performance** - Async database operations and optimized code
 - **Flexible** - Permission-based access with bypass options
-- **Reliable** - Request timeout and cooldown systems
-- **Multi-version** - Support for Minecraft 1.19.4 through 1.21.4
+- **Reliable** - Request timeout, cooldown, and safety systems
+- **Multi-version** - Support for Minecraft 1.19.4 through 1.21.X
 
 ## Commands
 
-| Command              | Description                     | Permission         |
-| -------------------- | ------------------------------- | ------------------ |
-| `/tpa <player>`      | Send a teleport request         | `easytpa.tpa`      |
-| `/tpaccept [player]` | Accept a teleport request       | `easytpa.tpaccept` |
-| `/tpdeny [player]`   | Deny a teleport request         | `easytpa.tpdeny`   |
-| `/tptoggle`          | Toggle teleport requests on/off | `easytpa.toggle`   |
-| `/easytpa reload`    | Reload the plugin configuration | `easytpa.admin`    |
+| Command              | Description                             | Permission         |
+| -------------------- | --------------------------------------- | ------------------ |
+| `/tpa <player>`      | Send a teleport request                 | `easytpa.tpa`      |
+| `/tpaccept [player]` | Accept a teleport request               | `easytpa.tpaccept` |
+| `/tpdeny [player]`   | Deny a teleport request                 | `easytpa.tpdeny`   |
+| `/tptoggle`          | Toggle teleport requests on/off         | `easytpa.toggle`   |
+| `/tpcancel`          | Cancel your pending request or teleport | `easytpa.tpa`      |
+| `/tplist`            | List all your pending teleport requests | `easytpa.tpa`      |
+| `/easytpa reload`    | Reload the plugin configuration         | `easytpa.admin`    |
 
 ## Permissions
 
@@ -43,6 +45,7 @@
 - `easytpa.admin` - Access admin commands (default: op)
 - `easytpa.bypass` - Bypass disabled teleport requests (default: op)
 - `easytpa.cooldown.bypass` - Bypass cooldown timers (default: op)
+- `easytpa.delay.bypass` - Bypass teleport delay (default: op)
 
 ### Permission Groups
 
@@ -55,6 +58,7 @@
 settings:
   request-timeout: 60 # Time in seconds before a request expires
   cooldown: 30 # Time in seconds between teleport requests
+  teleport-delay: 3 # Time in seconds before teleport executes (0 to disable)
   enable-sounds: true # Play sounds for teleport events
 
 # All messages are customizable
