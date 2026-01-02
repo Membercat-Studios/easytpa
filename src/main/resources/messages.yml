@@ -1,0 +1,81 @@
+# EasyTPA Messages Configuration
+# All messages support color codes and placeholders
+
+# General messages
+general:
+  prefix: "&7[&6EasyTPA&7] &r"
+  player-only: "&cThis command can only be used by players."
+  no-permission: "&cYou don't have permission to use this command."
+  player-not-found: "&cPlayer not found."
+
+# Command-specific messages
+commands:
+  tpa:
+    usage: "&cUsage: /tpa <player>"
+    cannot-teleport-self: "&cYou cannot send a teleport request to yourself."
+
+  tpaccept:
+    usage: "&cUsage: /tpaccept [player]"
+
+  tpdeny:
+    usage: "&cUsage: /tpdeny [player]"
+
+# Request messages
+requests:
+  sent: "&aYou have sent a teleport request to &e%player%&a."
+  received: "&e%player% &ahas requested to teleport to you."
+  already-has-request: "&cThis player already has a pending teleport request!"
+  expired: "&cThe teleport request has expired."
+  expired-target: "&cThe teleport request has expired!"
+  no-pending-request: "&cYou don't have any pending teleport requests!"
+  no-pending-requests: "&cYou have no pending teleport requests."
+  accepted: "&aYour teleport request has been accepted!"
+  accepted-target: "&aYou accepted &e%player%&a's teleport request."
+  denied: "&cYour teleport request has been denied."
+  denied-target: "&cYou denied &e%player%&c's teleport request."
+  cancelled: "&aYour teleport request has been cancelled."
+  player-offline: "&cThe player who sent the request is no longer online!"
+
+# Teleport messages
+teleport:
+  success: "&aYou have been teleported to &e%player%&a."
+  unsafe: "&cCannot teleport: The target location is unsafe!"
+  unsafe-target: "&cTeleport cancelled: The location became unsafe!"
+  starting: "&eTeleporting in &6%time% &eseconds... Don't move!"
+  starting-target: "&e%player% &eis teleporting to you in &6%time% &eseconds."
+  countdown: "&eTeleporting in &6%time% &eseconds..."
+  cancelled-moved: "&cTeleport cancelled! You moved."
+  cancelled-moved-target: "&c%player%'s teleport was cancelled (they moved)."
+  already-pending: "&cYou already have a teleport in progress!"
+  cancelled: "&aTeleport cancelled."
+
+# Cooldown messages
+cooldown:
+  message: "&cYou must wait &e%time% &cseconds before sending another request!"
+
+# Toggle messages
+toggle:
+  enabled: "&aTeleport requests have been &2enabled&a."
+  disabled: "&cTeleport requests have been &4disabled&c."
+  target-has-tp-disabled: "&c%player% has teleport requests disabled."
+
+# Interactive UI messages
+ui:
+  button:
+    accept: "&a[Accept]"
+    deny: "&c[Deny]"
+  hover:
+    accept: "&aClick to accept the teleport request"
+    deny: "&cClick to deny the teleport request"
+
+# Request list messages
+list:
+  header: "&6--- Your Teleport Requests ---"
+  received: "&7Received from: &e%player%"
+  sent: "&7Sent to: &e%player%"
+
+# Admin messages
+admin:
+  config-reloading: "&eReloading EasyTPA configuration..."
+  config-reloaded: "&aConfiguration has been reloaded successfully!"
+  nothing-to-cancel: "&cYou have nothing to cancel."

@@ -1,0 +1,84 @@
+name: EasyTPA
+version: v2.0.0-Alpha+1
+main: me.maybeizen.EasyTPA.EasyTPA
+api-version: 1.21
+description: Simple, powerful teleport requests for Minecraft servers
+authors: ["maybeizen", "Membercat Studios"]
+website: https://membercat.com
+depend: []
+softdepend: [PlaceholderAPI]
+
+commands:
+  tpa:
+    description: Send a teleport request to a player
+    usage: /tpa <player>
+    permission: easytpa.tpa
+    permission-message: "You don't have permission to use this command."
+  tpaccept:
+    description: Accept a teleport request
+    usage: /tpaccept [player]
+    permission: easytpa.tpaccept
+    permission-message: "You don't have permission to use this command."
+  tpdeny:
+    description: Deny a teleport request
+    usage: /tpdeny [player]
+    permission: easytpa.tpdeny
+    permission-message: "You don't have permission to use this command."
+  tptoggle:
+    description: Toggle teleport requests on/off
+    usage: /tptoggle
+    permission: easytpa.toggle
+    permission-message: "You don't have permission to use this command."
+  tpcancel:
+    description: Cancel your pending request or teleport
+    usage: /tpcancel
+    permission: easytpa.tpa
+    permission-message: "You don't have permission to use this command."
+  tplist:
+    description: List all your pending teleport requests
+    usage: /tplist
+    permission: easytpa.tpa
+    permission-message: "You don't have permission to use this command."
+  easytpa:
+    description: EasyTPA admin commands
+    usage: /easytpa reload
+    permission: easytpa.admin
+    permission-message: "You don't have permission to use this command."
+
+permissions:
+  easytpa.tpa:
+    description: Send teleport requests
+    default: true
+  easytpa.tpaccept:
+    description: Accept teleport requests
+    default: true
+  easytpa.tpdeny:
+    description: Deny teleport requests
+    default: true
+  easytpa.toggle:
+    description: Toggle teleport requests
+    default: true
+  easytpa.admin:
+    description: Access admin commands
+    default: op
+  easytpa.bypass:
+    description: Bypass disabled teleport requests
+    default: op
+  easytpa.cooldown.bypass:
+    description: Bypass cooldown timers
+    default: op
+  easytpa.delay.bypass:
+    description: Bypass teleport delay
+    default: op
+  easytpa.*:
+    description: All EasyTPA permissions
+    default: op
+    children:
+      easytpa.tpa: true
+      easytpa.tpaccept: true
+      easytpa.tpdeny: true
+      easytpa.toggle: true
+      easytpa.admin: true
+      easytpa.bypass: true
+      easytpa.cooldown.bypass: true
+      easytpa.delay.bypass: true

@@ -1,0 +1,16 @@
+# EasyTPA Configuration
+# Made by maybeizen
+
+# Plugin settings
+settings:
+  # Time in seconds before a request expires
+  request-timeout: 60
+  # Time in seconds between teleport requests
+  cooldown: 30
+  # Time in seconds before teleport executes (0 to disable)
+  teleport-delay: 3
+  # Whether to play sounds for teleport events
+  enable-sounds: true
+# Messages are now stored in messages.yml
+# This allows for better organization and easier translation
+# You can customize messages in the messages.yml file
