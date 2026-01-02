@@ -3,7 +3,7 @@
   <h1>EasyTPA</h1>
   <p><strong>Simple, powerful teleport requests for Minecraft servers</strong></p>
   
-  [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.4-brightgreen)](https://www.minecraft.net/)
+  [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.4+-brightgreen)](https://www.minecraft.net/)
   [![License](https://img.shields.io/badge/License-MIT-blue.svg)](license)
   [![Java](https://img.shields.io/badge/Java-21%2B-orange)](https://www.java.com/)
 </div>
@@ -17,7 +17,7 @@
 - **Performance** - Async database operations and optimized code
 - **Flexible** - Permission-based access with bypass options
 - **Reliable** - Request timeout, cooldown, and safety systems
-- **Multi-version** - Support for Minecraft 1.19.4 through 1.21.X
+- **Multi-version** - Support for Minecraft 1.21.4+
 
 ## Commands
 
@@ -61,10 +61,7 @@ settings:
   teleport-delay: 3 # Time in seconds before teleport executes (0 to disable)
   enable-sounds: true # Play sounds for teleport events
 
-# All messages are customizable
-messages:
-  prefix: "&7[&6EasyTPA&7] &r"
-  # ... and many more messages
+# Messages have moved to messages.yml
 ```
 
 ## Building from Source
@@ -90,12 +87,10 @@ If you encounter issues or have suggestions, please [open an issue](https://gith
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](license) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Contributing
 
 Contributions are welcome! Feel free to submit pull requests or open issues for bugs and feature requests.
-
----
 
 Made with ❤️ by [maybeizen](https://maybeizen.space)

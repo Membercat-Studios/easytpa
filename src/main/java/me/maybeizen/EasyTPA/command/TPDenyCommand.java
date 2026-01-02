@@ -83,6 +83,5 @@ public class TPDenyCommand extends SimpleCommandHandler {
     }
 
     public void register(CommandDispatcher<CommandSender> dispatcher) {
-        // Brigadier registration - Paper enhances commands automatically
     }
 }

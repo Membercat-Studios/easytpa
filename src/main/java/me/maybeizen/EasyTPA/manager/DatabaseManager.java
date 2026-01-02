@@ -91,7 +91,7 @@ public class DatabaseManager {
                 if (rs.next()) {
                     return rs.getInt("requests_enabled") == 1;
                 }
-                return true; // Default to enabled
+                return true;
             } catch (SQLException e) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to check user preferences", e);
                 return true;
